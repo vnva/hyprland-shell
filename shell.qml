@@ -2,6 +2,7 @@ import Quickshell
 import QtQuick
 
 import "bar" as Bar
+import "overview" as Overview
 
 ShellRoot {
     Variants {
@@ -13,5 +14,5 @@ ShellRoot {
         }
     }
 
-    Overview {}
+    Overview.Overview {}
 }
