@@ -26,6 +26,7 @@ ICONS=(
     chevron-down
     chevron-up
     clock
+    keyboard
 )
 
 BASE_URL="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons"
