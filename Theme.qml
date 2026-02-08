@@ -38,6 +38,9 @@ Singleton {
     readonly property int pillRadius: 14
     readonly property int pillPadding: 12
 
+    // Bar width (0 = full screen width)
+    readonly property int barWidth: parseInt(_config["barWidth"] ?? "0") || 1950
+
     // Spacing (4px base unit)
     readonly property int spacingUnit: 4
     readonly property int sectionPadding: 10

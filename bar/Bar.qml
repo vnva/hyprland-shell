@@ -25,48 +25,56 @@ PanelWindow {
         Root.Theme.glassOpacity
     )
 
-    // Left
-    Rectangle {
-        anchors.left: parent.left
-        anchors.leftMargin: Root.Theme.barMargin
-        anchors.top: parent.top
-        anchors.topMargin: Root.Theme.barMargin
-        anchors.bottom: parent.bottom
-        width: leftContent.implicitWidth + Root.Theme.sectionPadding * 2
-        radius: Root.Theme.barRadius
-        color: bar.glassColor
-
-        WorkspaceIndicator {
-            id: leftContent
-            anchors.centerIn: parent
-        }
-    }
-
-    // Center
-    Rectangle {
+    Item {
+        id: container
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
-        anchors.topMargin: Root.Theme.barMargin
         anchors.bottom: parent.bottom
-        width: centerContent.implicitWidth + Root.Theme.sectionPadding * 2
-        radius: Root.Theme.barRadius
-        color: bar.glassColor
+        width: Root.Theme.barWidth > 0 ? Math.min(parent.width, Root.Theme.barWidth) : parent.width
 
-        Clock {
-            id: centerContent
-            anchors.centerIn: parent
+        // Left
+        Rectangle {
+            anchors.left: parent.left
+            anchors.leftMargin: Root.Theme.barMargin
+            anchors.top: parent.top
+            anchors.topMargin: Root.Theme.barMargin
+            anchors.bottom: parent.bottom
+            width: leftContent.implicitWidth + Root.Theme.sectionPadding * 2
+            radius: Root.Theme.barRadius
+            color: bar.glassColor
+
+            WorkspaceIndicator {
+                id: leftContent
+                anchors.centerIn: parent
+            }
         }
-    }
 
-    // Right
-    Rectangle {
-        anchors.right: parent.right
-        anchors.rightMargin: Root.Theme.barMargin
-        anchors.top: parent.top
-        anchors.topMargin: Root.Theme.barMargin
-        anchors.bottom: parent.bottom
-        width: 60 + Root.Theme.sectionPadding * 2
-        radius: Root.Theme.barRadius
-        color: bar.glassColor
+        // Center
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            anchors.topMargin: Root.Theme.barMargin
+            anchors.bottom: parent.bottom
+            width: centerContent.implicitWidth + Root.Theme.sectionPadding * 2
+            radius: Root.Theme.barRadius
+            color: bar.glassColor
+
+            Clock {
+                id: centerContent
+                anchors.centerIn: parent
+            }
+        }
+
+        // Right
+        Rectangle {
+            anchors.right: parent.right
+            anchors.rightMargin: Root.Theme.barMargin
+            anchors.top: parent.top
+            anchors.topMargin: Root.Theme.barMargin
+            anchors.bottom: parent.bottom
+            width: 60 + Root.Theme.sectionPadding * 2
+            radius: Root.Theme.barRadius
+            color: bar.glassColor
+        }
     }
 }
