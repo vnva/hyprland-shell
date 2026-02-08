@@ -77,11 +77,18 @@ PanelWindow {
             radius: Root.Theme.barRadius
             color: bar.glassColor
 
-            SystemTray {
+            Row {
                 id: rightContent
                 anchors.centerIn: parent
-                panelWindow: bar
-                sectionItem: rightSection
+                spacing: Root.Theme.spacingUnit * 2
+
+                SystemTray {
+                    anchors.verticalCenter: parent.verticalCenter
+                    panelWindow: bar
+                    sectionItem: rightSection
+                }
+
+                KeyboardLayoutIndicator {}
             }
         }
     }
