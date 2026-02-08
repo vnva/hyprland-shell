@@ -67,14 +67,22 @@ PanelWindow {
 
         // Right
         Rectangle {
+            id: rightSection
             anchors.right: parent.right
             anchors.rightMargin: Root.Theme.barMargin
             anchors.top: parent.top
             anchors.topMargin: Root.Theme.barMargin
             anchors.bottom: parent.bottom
-            width: 60 + Root.Theme.sectionPadding * 2
+            width: rightContent.implicitWidth + Root.Theme.sectionPadding * 2
             radius: Root.Theme.barRadius
             color: bar.glassColor
+
+            SystemTray {
+                id: rightContent
+                anchors.centerIn: parent
+                panelWindow: bar
+                sectionItem: rightSection
+            }
         }
     }
 }

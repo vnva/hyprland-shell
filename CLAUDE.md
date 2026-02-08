@@ -78,6 +78,7 @@ These principles should guide all implementation decisions:
 - All spacing follows a **4px base unit** (4, 8, 12, 16).
 - Bar height is 32px. Typography: 13px primary, 11px secondary. Regular weight only (bold reserved for active workspace).
 - Glass backgrounds use `base00` with configurable opacity (`glassOpacity` for bar, `overviewGlassOpacity` for overview).
+- `PopupWindow` sizing: use `implicitWidth`/`implicitHeight`, not `width`/`height` (deprecated in Quickshell).
 
 ## Quickshell Documentation
 
