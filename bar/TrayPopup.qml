@@ -11,33 +11,61 @@ PanelWindow {
 
     WlrLayershell.namespace: "hyprland-shell-bar"
     WlrLayershell.layer: WlrLayer.Overlay
+    WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
     visible: false
     color: "transparent"
 
     property int barHeight: Root.Theme.barHeight
     property int barMargin: Root.Theme.barMargin
-    property real rightSectionX: 0  // Distance from right edge of screen to right section
+    property real rightSectionX: 0
 
+    // Fill entire screen with transparent backdrop
     anchors {
         top: true
+        bottom: true
+        left: true
         right: true
     }
 
-    margins {
-        top: barHeight + barMargin * 2
-        right: rightSectionX
+    exclusionMode: ExclusionMode.Ignore
+    focusable: true
+
+    onVisibleChanged: {
+        if (visible) {
+            keyHandler.forceActiveFocus();
+        }
     }
 
-    implicitWidth: 200 + Root.Theme.sectionPadding * 2
-    implicitHeight: contentColumn.implicitHeight + Root.Theme.sectionPadding * 2
+    // Invisible item to capture keyboard focus
+    Item {
+        id: keyHandler
+        anchors.fill: parent
+        focus: true
 
-    exclusionMode: ExclusionMode.Ignore
-    focusable: false
+        Keys.onPressed: (event) => {
+            popup.visible = false;
+            event.accepted = true;
+        }
+    }
 
+    // Transparent backdrop - closes on click
+    MouseArea {
+        anchors.fill: parent
+        onClicked: popup.visible = false
+    }
+
+    // Popup content positioned in top-right
     Rectangle {
         id: popupContent
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: barHeight + barMargin * 2
+        anchors.rightMargin: rightSectionX
+
+        width: 200 + Root.Theme.sectionPadding * 2
+        height: contentColumn.implicitHeight + Root.Theme.sectionPadding * 2
+
         radius: Root.Theme.barRadius
         color: Qt.rgba(
             Root.Theme.base00.r,
@@ -85,22 +113,22 @@ PanelWindow {
 
                     Row {
                         anchors.fill: parent
-                        anchors.leftMargin: Root.Theme.spacingUnit * 2
-                        anchors.rightMargin: Root.Theme.spacingUnit * 2
-                        spacing: Root.Theme.spacingUnit * 2
+                        anchors.leftMargin: Root.Theme.spacingUnit
+                        anchors.rightMargin: Root.Theme.spacingUnit
+                        spacing: Root.Theme.spacingUnit + 2
 
                         Image {
                             anchors.verticalCenter: parent.verticalCenter
                             source: trayItemDelegate.modelData.icon
-                            width: 16
-                            height: 16
-                            sourceSize: Qt.size(16, 16)
+                            width: Root.Theme.fontSizePrimary + 1
+                            height: Root.Theme.fontSizePrimary + 1
+                            sourceSize: Qt.size(Root.Theme.fontSizePrimary + 1, Root.Theme.fontSizePrimary + 1)
                         }
 
 
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
-                            text: trayItemDelegate.modelData.title || trayItemDelegate.modelData.id
+                            text: trayItemDelegate.modelData.tooltipTitle || trayItemDelegate.modelData.title || trayItemDelegate.modelData.id
                             font.family: Root.Theme.fontFamily
                             font.pixelSize: Root.Theme.fontSizePrimary
                             color: Root.Theme.base05
@@ -122,20 +150,12 @@ PanelWindow {
                                 trayItemDelegate.modelData.display(popup, pos.x, pos.y);
                             } else {
                                 trayItemDelegate.modelData.activate();
+                                popup.visible = false;  // Close after activation
                             }
                         }
                     }
                 }
             }
-        }
-    }
-
-    // Click outside to close
-    MouseArea {
-        anchors.fill: parent
-        z: -1
-        onPressed: {
-            popup.visible = false;
         }
     }
 }
