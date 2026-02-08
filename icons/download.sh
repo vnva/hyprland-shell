@@ -27,6 +27,10 @@ ICONS=(
     chevron-up
     clock
     keyboard
+    user
+    lock
+    lock-open
+    loader-circle
 )
 
 BASE_URL="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons"

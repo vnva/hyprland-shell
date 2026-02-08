@@ -4,6 +4,7 @@ import QtQuick
 
 import "bar" as Bar
 import "overview" as Overview
+import "lockscreen" as Lockscreen
 
 ShellRoot {
     Variants {
@@ -16,4 +17,5 @@ ShellRoot {
     }
 
     Overview.Overview {}
+    Lockscreen.Lockscreen {}
 }
