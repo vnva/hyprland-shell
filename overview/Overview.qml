@@ -1,10 +1,13 @@
 import QtQuick
 import Quickshell
+import Quickshell.Wayland
 import Quickshell.Hyprland
 import ".." as Root
 
 PanelWindow {
     id: overview
+
+    WlrLayershell.namespace: "solid-shell-overview"
 
     visible: false
     color: "transparent"
@@ -123,7 +126,7 @@ PanelWindow {
             Root.Theme.base00.r,
             Root.Theme.base00.g,
             Root.Theme.base00.b,
-            0.92
+            Root.Theme.overviewGlassOpacity
         )
 
         MouseArea {
@@ -162,7 +165,6 @@ PanelWindow {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "/"
                     font.pixelSize: 13
-                    font.family: "monospace"
                     color: Root.Theme.base03
                 }
 
@@ -175,8 +177,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width
                         font.pixelSize: Root.Theme.fontSizePrimary
-                        font.family: "monospace"
-                        color: Root.Theme.base05
+                            color: Root.Theme.base05
                         selectionColor: Root.Theme.base0D
                         selectedTextColor: Root.Theme.base00
                         clip: true
@@ -228,8 +229,7 @@ PanelWindow {
                         visible: searchInput.text === ""
                         text: "Search\u2026"
                         font.pixelSize: Root.Theme.fontSizePrimary
-                        font.family: "monospace"
-                        color: Root.Theme.base03
+                            color: Root.Theme.base03
                     }
                 }
             }
@@ -304,7 +304,6 @@ PanelWindow {
             visible: overview.displayedWindows.length === 0
             text: overview.searching ? "No matches" : "No windows"
             font.pixelSize: Root.Theme.fontSizePrimary
-            font.family: "monospace"
             color: Root.Theme.base03
         }
     }

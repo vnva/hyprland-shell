@@ -74,7 +74,6 @@ Rectangle {
                 anchors.centerIn: parent
                 text: windowCard.window.workspace?.id ?? ""
                 font.pixelSize: 10
-                font.family: "monospace"
                 color: Root.Theme.base04
             }
         }
@@ -110,7 +109,6 @@ Rectangle {
                 Layout.fillWidth: true
                 text: windowCard.window.title || "untitled"
                 font.pixelSize: Root.Theme.fontSizeSecondary
-                font.family: "monospace"
                 color: windowCard.selected ? Root.Theme.base05 : Root.Theme.base04
                 elide: Text.ElideRight
             }

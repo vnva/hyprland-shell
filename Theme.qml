@@ -42,6 +42,10 @@ Singleton {
     readonly property int sectionPadding: 10
     readonly property int widgetGap: 6
 
+    // Glass
+    readonly property real glassOpacity: 0.6
+    readonly property real overviewGlassOpacity: 0.75
+
     // Transitions
     readonly property int transitionDuration: 150
 
