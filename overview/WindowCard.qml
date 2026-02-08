@@ -7,81 +7,111 @@ import ".." as Root
 Rectangle {
     id: windowCard
 
-    required property var modelData
-    required property int workspaceId
+    required property var window
+    required property bool selected
+    required property real cardWidth
+    required property real cardHeight
     required property bool overviewVisible
 
-    signal selected()
+    signal activated()
 
-    width: parent?.width ?? 0
-    height: cardContent.implicitHeight + 8
-    radius: 8
-    color: windowMouse.containsMouse
+    property bool hovered: cardHover.hovered
+
+    width: cardWidth
+    height: cardHeight + titleBar.height
+    radius: 12
+    color: selected
         ? Root.Theme.base02
-        : Root.Theme.base01
+        : hovered
+            ? Qt.rgba(Root.Theme.base01.r, Root.Theme.base01.g, Root.Theme.base01.b, 0.9)
+            : Qt.rgba(Root.Theme.base01.r, Root.Theme.base01.g, Root.Theme.base01.b, 0.5)
 
-    border.width: windowCard.modelData.activated ? 1 : 0
+    border.width: selected ? 2 : 0
     border.color: Root.Theme.base0D
 
+    // Hover tracking — passive, unaffected by child MouseAreas
+    HoverHandler {
+        id: cardHover
+    }
+
+    // Click — behind everything so closeMouse can intercept
     MouseArea {
-        id: windowMouse
         anchors.fill: parent
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: {
-            Hyprland.dispatch("workspace " + windowCard.workspaceId);
-            windowCard.modelData.wayland?.activate();
-            windowCard.selected();
+        onClicked: windowCard.activated()
+    }
+
+    // Preview
+    Rectangle {
+        id: preview
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 4
+        height: windowCard.cardHeight - 4
+        radius: 10
+        color: Root.Theme.base00
+        clip: true
+
+        ScreencopyView {
+            anchors.fill: parent
+            captureSource: windowCard.window.wayland
+            live: windowCard.overviewVisible
+            paintCursor: false
+        }
+
+        // Workspace badge — top right of preview
+        Rectangle {
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.margins: 6
+            width: 22
+            height: 18
+            radius: 4
+            color: Qt.rgba(Root.Theme.base00.r, Root.Theme.base00.g, Root.Theme.base00.b, 0.7)
+
+            Text {
+                anchors.centerIn: parent
+                text: windowCard.window.workspace?.id ?? ""
+                font.pixelSize: 10
+                font.family: "monospace"
+                color: Root.Theme.base04
+            }
+        }
+
+        // Active window dot — top left of preview
+        Rectangle {
+            visible: windowCard.window.activated
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.margins: 8
+            width: 8
+            height: 8
+            radius: 4
+            color: Root.Theme.base0D
         }
     }
 
-    Column {
-        id: cardContent
+    // Title bar
+    Item {
+        id: titleBar
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.margins: 4
-        spacing: 6
+        height: 32
 
-        // Preview
-        Rectangle {
-            width: parent.width
-            height: width * 0.56
-            radius: 6
-            color: Root.Theme.base00
-            clip: true
-
-            ScreencopyView {
-                anchors.fill: parent
-                captureSource: windowCard.modelData.wayland
-                live: windowCard.overviewVisible
-                paintCursor: false
-            }
-
-            // Active window badge
-            Rectangle {
-                visible: windowCard.modelData.activated
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.margins: 6
-                width: 8
-                height: 8
-                radius: 4
-                color: Root.Theme.base0D
-            }
-        }
-
-        // Title row
         RowLayout {
-            width: parent.width
+            anchors.fill: parent
+            anchors.leftMargin: 10
+            anchors.rightMargin: 10
             spacing: 6
 
             Text {
                 Layout.fillWidth: true
-                text: windowCard.modelData.title || "untitled"
-                font.pixelSize: Root.Theme.fontSizePrimary
+                text: windowCard.window.title || "untitled"
+                font.pixelSize: Root.Theme.fontSizeSecondary
                 font.family: "monospace"
-                color: Root.Theme.base05
+                color: windowCard.selected ? Root.Theme.base05 : Root.Theme.base04
                 elide: Text.ElideRight
             }
 
@@ -90,18 +120,14 @@ Rectangle {
                 Layout.preferredWidth: 18
                 Layout.preferredHeight: 18
                 radius: 9
-                color: closeMouse.containsMouse
-                    ? Root.Theme.base09
-                    : "transparent"
-                opacity: windowMouse.containsMouse ? 1.0 : 0.0
+                color: closeMouse.containsMouse ? Root.Theme.base09 : "transparent"
+                visible: windowCard.hovered || windowCard.selected
 
                 Text {
                     anchors.centerIn: parent
                     text: "\u00d7"
-                    font.pixelSize: 14
-                    color: closeMouse.containsMouse
-                        ? Root.Theme.base07
-                        : Root.Theme.base04
+                    font.pixelSize: 13
+                    color: closeMouse.containsMouse ? Root.Theme.base07 : Root.Theme.base04
                 }
 
                 MouseArea {
@@ -109,7 +135,7 @@ Rectangle {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: windowCard.modelData.wayland?.close()
+                    onClicked: windowCard.window.wayland?.close()
                 }
             }
         }
