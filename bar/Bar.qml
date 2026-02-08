@@ -30,7 +30,7 @@ PanelWindow {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        width: Root.Theme.barWidth > 0 ? Math.min(parent.width, Root.Theme.barWidth) : parent.width
+        implicitWidth: Root.Theme.barWidth > 0 ? Math.min(parent.width, Root.Theme.barWidth) : parent.width
 
         // Left
         Rectangle {
@@ -39,7 +39,7 @@ PanelWindow {
             anchors.top: parent.top
             anchors.topMargin: Root.Theme.barMargin
             anchors.bottom: parent.bottom
-            width: leftContent.implicitWidth + Root.Theme.sectionPadding * 2
+            implicitWidth: leftContent.implicitWidth + Root.Theme.sectionPadding * 2
             radius: Root.Theme.barRadius
             color: bar.glassColor
 
@@ -55,7 +55,7 @@ PanelWindow {
             anchors.top: parent.top
             anchors.topMargin: Root.Theme.barMargin
             anchors.bottom: parent.bottom
-            width: centerContent.implicitWidth + Root.Theme.sectionPadding * 2
+            implicitWidth: centerContent.implicitWidth + Root.Theme.sectionPadding * 2
             radius: Root.Theme.barRadius
             color: bar.glassColor
 
@@ -73,7 +73,7 @@ PanelWindow {
             anchors.top: parent.top
             anchors.topMargin: Root.Theme.barMargin
             anchors.bottom: parent.bottom
-            width: rightContent.implicitWidth + Root.Theme.sectionPadding * 2
+            implicitWidth: rightContent.implicitWidth + Root.Theme.sectionPadding * 2
             radius: Root.Theme.barRadius
             color: bar.glassColor
 
@@ -84,12 +84,22 @@ PanelWindow {
 
                 SystemTray {
                     anchors.verticalCenter: parent.verticalCenter
-                    panelWindow: bar
-                    sectionItem: rightSection
+                    trayPopup: trayPopup
                 }
 
                 KeyboardLayoutIndicator {}
             }
+        }
+    }
+
+    TrayPopup {
+        id: trayPopup
+        rightSectionX: {
+            // Calculate distance from right edge of screen to right section
+            let screenW = bar.screen.width;
+            let containerW = container.width;
+            let containerOffset = (screenW - containerW) / 2;
+            return containerOffset + Root.Theme.barMargin;
         }
     }
 }
