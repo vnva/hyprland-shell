@@ -5,7 +5,7 @@ import ".." as Root
 import "../icons" as Icons
 
 Row {
-    spacing: 6
+    spacing: Root.Theme.spacingUnit
 
     SystemClock {
         id: clock
@@ -14,8 +14,7 @@ Row {
 
     Icons.Icon {
         anchors.verticalCenter: parent.verticalCenter
-        width: Root.Theme.fontSizePrimary
-        height: Root.Theme.fontSizePrimary
+        size: Root.Theme.fontSizePrimary
         name: "clock"
         color: Root.Theme.base05
     }
@@ -23,6 +22,7 @@ Row {
     Text {
         anchors.verticalCenter: parent.verticalCenter
         text: Qt.formatDateTime(clock.date, "HH:mm") + " / " + Qt.formatDateTime(clock.date, "dd.MM")
+        font.family: Root.Theme.fontFamily
         font.pixelSize: Root.Theme.fontSizePrimary
         color: Root.Theme.base05
     }

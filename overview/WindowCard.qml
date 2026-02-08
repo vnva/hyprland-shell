@@ -73,6 +73,7 @@ Rectangle {
             Text {
                 anchors.centerIn: parent
                 text: windowCard.window.workspace?.id ?? ""
+                font.family: Root.Theme.fontFamily
                 font.pixelSize: 10
                 color: Root.Theme.base04
             }
@@ -108,6 +109,7 @@ Rectangle {
             Text {
                 Layout.fillWidth: true
                 text: windowCard.window.title || "untitled"
+                font.family: Root.Theme.fontFamily
                 font.pixelSize: Root.Theme.fontSizeSecondary
                 color: windowCard.selected ? Root.Theme.base05 : Root.Theme.base04
                 elide: Text.ElideRight
@@ -124,6 +126,7 @@ Rectangle {
                 Text {
                     anchors.centerIn: parent
                     text: "\u00d7"
+                    font.family: Root.Theme.fontFamily
                     font.pixelSize: 13
                     color: closeMouse.containsMouse ? Root.Theme.base07 : Root.Theme.base04
                 }

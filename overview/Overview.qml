@@ -164,6 +164,7 @@ PanelWindow {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: "/"
+                    font.family: Root.Theme.fontFamily
                     font.pixelSize: 13
                     color: Root.Theme.base03
                 }
@@ -176,6 +177,7 @@ PanelWindow {
                         id: searchInput
                         anchors.verticalCenter: parent.verticalCenter
                         width: parent.width
+                        font.family: Root.Theme.fontFamily
                         font.pixelSize: Root.Theme.fontSizePrimary
                             color: Root.Theme.base05
                         selectionColor: Root.Theme.base0D
@@ -228,6 +230,7 @@ PanelWindow {
                         anchors.verticalCenter: parent.verticalCenter
                         visible: searchInput.text === ""
                         text: "Search\u2026"
+                        font.family: Root.Theme.fontFamily
                         font.pixelSize: Root.Theme.fontSizePrimary
                             color: Root.Theme.base03
                     }
@@ -303,6 +306,7 @@ PanelWindow {
             anchors.centerIn: parent
             visible: overview.displayedWindows.length === 0
             text: overview.searching ? "No matches" : "No windows"
+            font.family: Root.Theme.fontFamily
             font.pixelSize: Root.Theme.fontSizePrimary
             color: Root.Theme.base03
         }

@@ -26,11 +26,12 @@ Singleton {
     readonly property color base0F: _colors["base0F"] ?? "#b15f4a"
 
     // Typography
-    readonly property int fontSizePrimary: 13
-    readonly property int fontSizeSecondary: 11
+    readonly property string fontFamily: _config["font"] ?? "Noto Sans"
+    readonly property int fontSizePrimary: 12
+    readonly property int fontSizeSecondary: 10
 
     // Layout
-    readonly property int barHeight: 32
+    readonly property int barHeight: 30
     readonly property int barMargin: 4
     readonly property int barRadius: 5
     readonly property int pillHeight: 28
@@ -49,8 +50,9 @@ Singleton {
     // Transitions
     readonly property int transitionDuration: 150
 
-    // Internal: parsed colors from config file
+    // Internal: parsed values from config file
     property var _colors: ({})
+    property var _config: ({})
 
     FileView {
         id: colorsFile
@@ -61,24 +63,31 @@ Singleton {
         printErrors: false
     }
 
-    function _parseColors(text: string) {
-        let result = {};
+    function _parseConfig(text: string) {
+        let colors = {};
+        let config = {};
         let lines = text.split("\n");
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i].trim();
             if (line === "" || line.startsWith("#")) continue;
-            let match = line.match(/^(base[0-9A-Fa-f]{2})\s*:\s*"?(#[0-9A-Fa-f]{6})"?/);
-            if (match) {
-                result[match[1]] = match[2];
+            let colorMatch = line.match(/^(base[0-9A-Fa-f]{2})\s*:\s*"?(#[0-9A-Fa-f]{6})"?/);
+            if (colorMatch) {
+                colors[colorMatch[1]] = colorMatch[2];
+                continue;
+            }
+            let kvMatch = line.match(/^(\w+)\s*:\s*"?([^"]+)"?\s*$/);
+            if (kvMatch) {
+                config[kvMatch[1]] = kvMatch[2].trim();
             }
         }
-        _colors = result;
+        _colors = colors;
+        _config = config;
     }
 
     Component.onCompleted: {
         let content = colorsFile.text();
         if (content && content.length > 0) {
-            _parseColors(content);
+            _parseConfig(content);
         }
     }
 }

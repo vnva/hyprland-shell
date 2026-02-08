@@ -5,8 +5,12 @@ Item {
     id: root
 
     property string name
+    property real size: 12
 
     property color color: "white"
+
+    width: size + 1
+    height: size + 1
 
     Image {
         id: image
