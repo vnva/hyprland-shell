@@ -55,7 +55,7 @@ Singleton {
     FileView {
         id: colorsFile
         path: Quickshell.env("SOLID_SHELL_COLORS")
-            || (Quickshell.env("HOME") + "/.config/solid-shell/colors.conf")
+            || (Quickshell.env("HOME") + "/.config/hyprland-shell/colors.conf")
         blockLoading: true
         blockAllReads: false
         printErrors: false

@@ -23,18 +23,28 @@ There is no test framework. Testing is done manually via the live shell.
 ```
 shell.qml                    # Root: spawns one bar per monitor via Variants
 Theme.qml                    # Singleton: Base16 color palette + layout constants
-Overview.qml                 # Full-screen window overview/switcher overlay
 bar/
   Bar.qml                    # Panel layout with left/center/right sections
-  WorkspaceIndicator.qml     # Workspace dots (Hyprland integration)
-  Clock.qml                  # Time/date display
+  WorkspaceIndicator.qml     # Workspace dots (click/scroll to switch)
+  Clock.qml                  # Time/date display with icon
+overview/
+  Overview.qml               # Full-screen window overview/switcher overlay
+  WindowCard.qml             # Individual window card with live preview
+icons/
+  Icon.qml                   # Reusable tinted SVG icon component
+  download.sh                # Downloads Lucide icons into source/
+  source/                    # SVG files (Lucide icons)
 ```
 
 **Data flow:** `shell.qml` creates per-monitor `Bar` instances and one `Overview`. All components access `Theme` singleton for colors and dimensions. `WorkspaceIndicator` and `Overview` read from `Quickshell.Hyprland` for workspace/window state.
 
 **Multi-monitor:** Bars are spawned reactively using `Variants { model: Quickshell.screens }`. Bars are created/destroyed automatically as monitors connect/disconnect.
 
-**Theme system:** `Theme.qml` is a `Singleton` that reads colors from `$SOLID_SHELL_COLORS` or `~/.config/solid-shell/colors.conf` (key-value format with `#` comments). Missing keys fall back to hardcoded Base16 defaults. All layout dimensions (bar height, spacing, radii) are also defined here.
+**Theme system:** `Theme.qml` is a `Singleton` that reads colors from `$SOLID_SHELL_COLORS` or `~/.config/hyprland-shell/colors.conf` (key-value format with `#` comments). Missing keys fall back to hardcoded Base16 defaults. All layout dimensions (bar height, spacing, radii) are also defined here.
+
+**Icon system:** `icons/Icon.qml` renders tinted SVG icons. Uses `QtQuick.Effects` `MultiEffect` with `brightness: 1.0` + `colorization: 1.0` to recolor SVGs (brightness is required because SVG `currentColor` renders as black). Usage: `Icons.Icon { name: "clock"; color: Theme.base05; width: 13; height: 13 }`. Import as `import "../icons" as Icons` from bar/, or `import "icons" as Icons` from root. Do NOT use `Qt5Compat.GraphicalEffects`.
+
+**Overview:** Toggled via `GlobalShortcut` (appid: `hyprland-shell`, name: `overview`). Features search filtering by window title/appId, keyboard navigation (arrows/tab), live window previews via `ScreencopyView`, workspace dots, and close buttons. Grid layout auto-adjusts columns based on window count.
 
 ## Design Principles (from PROMPT.md)
 
@@ -54,18 +64,20 @@ These principles should guide all implementation decisions:
 | Background | `base00` | Bar background |
 | Primary text | `base05` | Clock, active content |
 | Muted/inactive | `base03` | Inactive workspaces, secondary info |
-| Active accent | `base0D` | Active workspace, focused element |
+| Active accent | `base0D` | Active workspace, focused element, selection border |
 | Warning | `base0A` | Battery low (<20%) |
-| Critical | `base09` | Battery critical (<5%), disconnected |
+| Critical | `base09` | Battery critical (<5%), close button hover |
 | Healthy | `base0B` | Only on hover to confirm positive state |
 
 ## QML Conventions
 
 - Files must use **PascalCase** — QML auto-registers files starting with uppercase as types.
 - Import parent directory as `import ".." as Root` to access Theme and other root-level types.
+- Import icons as `import "../icons" as Icons` (from bar/) or `import "icons" as Icons` (from root).
 - New files are created only when they represent a distinct spatial region or interaction pattern; avoid artificial splitting.
 - All spacing follows a **4px base unit** (4, 8, 12, 16).
 - Bar height is 32px. Typography: 13px primary, 11px secondary. Regular weight only (bold reserved for active workspace).
+- Glass backgrounds use `base00` with configurable opacity (`glassOpacity` for bar, `overviewGlassOpacity` for overview).
 
 ## Quickshell Documentation
 

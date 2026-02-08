@@ -7,7 +7,7 @@ import ".." as Root
 PanelWindow {
     id: bar
 
-    WlrLayershell.namespace: "solid-shell-bar"
+    WlrLayershell.namespace: "hyprland-shell-bar"
 
     anchors {
         top: true

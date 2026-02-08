@@ -7,7 +7,7 @@ import ".." as Root
 PanelWindow {
     id: overview
 
-    WlrLayershell.namespace: "solid-shell-overview"
+    WlrLayershell.namespace: "hyprland-shell-overview"
 
     visible: false
     color: "transparent"
@@ -108,7 +108,7 @@ PanelWindow {
     }
 
     GlobalShortcut {
-        appid: "solid-shell"
+        appid: "hyprland-shell"
         name: "overview"
         description: "Toggle window overview"
         onPressed: overview.toggle()
