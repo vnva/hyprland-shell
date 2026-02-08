@@ -27,14 +27,34 @@ PanelWindow {
     property int selectedIndex: 0
 
     property var displayedWindows: {
-        let all = Hyprland.toplevels.values;
-        if (!searching) return all;
-        let q = searchText;
-        return all.filter(t => {
-            let title = (t.title ?? "").toLowerCase();
-            let appId = (t.wayland?.appId ?? "").toLowerCase();
-            return title.includes(q) || appId.includes(q);
+        // Create mutable array copy
+        let all = Array.from(Hyprland.toplevels.values);
+
+        // Filter by search text if searching
+        if (searching) {
+            let q = searchText;
+            all = all.filter(t => {
+                let title = (t.title ?? "").toLowerCase();
+                let appId = (t.wayland?.appId ?? "").toLowerCase();
+                return title.includes(q) || appId.includes(q);
+            });
+        }
+
+        // Sort: first by workspace number, then by window size (descending)
+        all.sort((a, b) => {
+            let wsA = a.workspace?.id ?? 999;
+            let wsB = b.workspace?.id ?? 999;
+
+            // Primary sort: workspace number
+            if (wsA !== wsB) return wsA - wsB;
+
+            // Secondary sort: window size (area), largest first
+            let areaA = (a.size?.x ?? 0) * (a.size?.y ?? 0);
+            let areaB = (b.size?.x ?? 0) * (b.size?.y ?? 0);
+            return areaB - areaA;
         });
+
+        return all;
     }
 
     // Grid sizing — fit cards to available space

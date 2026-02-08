@@ -48,7 +48,7 @@ Singleton {
 
     // Glass
     readonly property real glassOpacity: 0.6
-    readonly property real overviewGlassOpacity: 0.75
+    readonly property real overviewGlassOpacity: 0.3
 
     // Transitions
     readonly property int transitionDuration: 150
